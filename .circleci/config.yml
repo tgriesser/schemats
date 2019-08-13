@@ -10,11 +10,11 @@ jobs:
                   POSTGRES_DB: schemats_test
             - image: mysql:5.7
               environment:
-                  MYSQL_DB: schemats_test
                   MYSQL_ALLOW_EMPTY_PASSWORD: true
         steps: # a collection of executable commands
             - checkout # special step to check out source code to working directory
             - run: yarn
+            - run: mysql -u root -e "create database schemats_test"
             - run:
                   environment:
                       POSTGRES_URL: 'postgres://ubuntu:@localhost/schemats_test'
