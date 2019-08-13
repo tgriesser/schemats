@@ -12,7 +12,7 @@ jobs:
               environment:
                   MYSQL_USER: ubuntu
                   MYSQL_DB: schemats_test
-                  MYSQL_ROOT_PASSWORD: password
+                  MYSQL_ALLOW_EMPTY_PASSWORD: true
         steps: # a collection of executable commands
             - checkout # special step to check out source code to working directory
             - run: yarn
