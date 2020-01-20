@@ -3,14 +3,11 @@
     "schema": null,
     "camelCase": true,
     "writeHeader": false,
+    "forInsert": true,
+    "tableNamespaces": false,
     "prettierConfig": {
         "tabWidth": 4,
         "singleQuote": true,
         "semi": false
-    },
-    "customTypes": {
-        "users": {
-            "custom_table_type": "'a' | 'b' | 'c'"
-        }
     }
 }
