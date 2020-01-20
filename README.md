@@ -2,11 +2,12 @@
 
 Upstream fork of https://github.com/SweetIQ/schemats, with new features / options:
 
--   `forInsert`: defines any nullable / columns with defaults optional `?:`
+-   `forInsert`: defines any nullable / columns with defaults optional `?:`, default `false`
+-   `forInsertNull`: use with `forInsert`, makes any null columns required, default `false`
 -   `customTypes`: define a mapping of custom types, e.g. for emulating enum behavior
 -   `customHeader`: allows adding a custom string header to the generated document
 -   `prettierConfig`: specify a path to prettier to auto-format the output
--   `tableNamespaces`: whether to add extra namespaces for columns, default to `false`
+-   `tableNamespaces`: whether to add extra namespaces for columns, default `false`
 
 ```
 yarn install @tgriesser/schemats

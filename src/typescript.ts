@@ -22,11 +22,16 @@ function normalizeName(name: string, options: Options): string {
 }
 
 function colon(def: ColumnDefinition, options: Options) {
-    return options.options.forInsert
-        ? def.defaultValue !== null || def.nullable
-            ? '?:'
-            : ':'
-        : ':'
+    if (options.options.forInsert !== true) {
+        return ':'
+    }
+    if (typeof def.defaultValue === 'string') {
+        return '?:'
+    }
+    if (def.nullable && options.options.forInsertNull !== true) {
+        return '?:'
+    }
+    return ':'
 }
 
 export function generateTableInterface(
