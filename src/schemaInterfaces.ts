@@ -6,6 +6,7 @@ export interface ColumnDefinition {
     defaultValue: string | null
     tsType?: string
     tsCustomType?: boolean
+    rawType?: string
 }
 
 export interface TableDefinition {

@@ -68,6 +68,7 @@
     },
     "dependencies": {
         "bluebird": "^3.5.0",
+        "clickhouse": "^1.2.24",
         "diff": "^3.2.0",
         "lodash": "^4.17.4",
         "mysql": "^2.13.0",

@@ -102,4 +102,39 @@ describe('schemat generation integration testing', () => {
       }
     })
   })
+
+  describe('clickhouse', () => {
+    let db: Database
+    before(async function() {
+      if (!process.env.CLICKHOUSE_URL) {
+        return this.skip()
+      }
+      db = getDatabase(`${process.env.CLICKHOUSE_URL}?multipleStatements=true`)
+      await loadSchema(db, './test/fixture/clickhouse/initCleanup.sql')
+    })
+    it('Basic generation', async () => {
+      const inputSQLFile = 'test/fixture/clickhouse/osm.sql'
+      const outputFile = './test/actual/clickhouse/osm.ts'
+      const expectedFile = './test/expected/clickhouse/osm.ts'
+      const config: any = './fixture/clickhouse/osm.json'
+      await writeTsFile(inputSQLFile, config, outputFile, db)
+      return assert(await compare(expectedFile, outputFile))
+    })
+    it('for insert generation', async () => {
+      const inputSQLFile = 'test/fixture/clickhouse/osm.sql'
+      const outputFile = './test/actual/clickhouse/osm-for-insert.ts'
+      const expectedFile = './test/expected/clickhouse/osm-for-insert.ts'
+      const config: any = './fixture/clickhouse/osm-for-insert.json'
+      await writeTsFile(inputSQLFile, config, outputFile, db)
+      return assert(await compare(expectedFile, outputFile))      
+    })
+    it('for insert generation, requiring null fields', async () => {
+      const inputSQLFile = 'test/fixture/clickhouse/osm.sql'
+      const outputFile = './test/actual/clickhouse/osm-for-insert-with-null.ts'
+      const expectedFile = './test/expected/clickhouse/osm-for-insert-with-null.ts'
+      const config: any = './fixture/clickhouse/osm-for-insert-with-null.json'
+      await writeTsFile(inputSQLFile, config, outputFile, db)
+      return assert(await compare(expectedFile, outputFile))      
+    })
+  })
 })
