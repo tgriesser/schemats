@@ -12,13 +12,11 @@ jobs:
               environment:
                   MYSQL_DATABASE: schemats_test
                   MYSQL_ALLOW_EMPTY_PASSWORD: true
-            - image: yandex/clickhouse-server
         steps: # a collection of executable commands
             - checkout # special step to check out source code to working directory
             - run: yarn
             - run:
                   environment:
-                      CLICKHOUSE_URL: 'clickhouse://localhost'
                       POSTGRES_URL: 'postgres://ubuntu:@localhost/schemats_test'
                       MYSQL_URL: 'mysql://root:@localhost/schemats_test'
                   command: yarn coverage:ci
