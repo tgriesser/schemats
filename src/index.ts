@@ -138,7 +138,7 @@ export async function typescriptOfSchema(
             })
         } catch (e) {
             throw new Error(
-                'Install prettier as a devDependency, or pass prettier:false to the schemats options'
+                'Please install library "prettier" into your global module. e.g. npm install -g prettier'
             )
         }
     }
