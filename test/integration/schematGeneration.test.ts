@@ -1,6 +1,7 @@
 import * as assert from 'power-assert'
+import * as path from 'path'
 import { Database, getDatabase } from '../../src/index'
-import { writeTsFile, compare, loadSchema } from '../testUtility'
+import { writeTsFile, compare, loadSchema, writeTsFileSqlite3 } from '../testUtility'
 
 describe('schemat generation integration testing', () => {
   describe('postgres', () => {
@@ -137,4 +138,41 @@ describe('schemat generation integration testing', () => {
       return assert(await compare(expectedFile, outputFile))      
     })
   })
+
+  describe('sqlite3', () => {
+    let db: Database
+    before(async function() {
+      db = getDatabase(path.join(__dirname, '../fixture/sqlite3/fixture.sqlite'), {sqlite3: true})
+    })
+    it('Basic generation', async () => {
+      const outputFile = './test/actual/sqlite3/osm.ts'
+      const expectedFile = './test/expected/sqlite3/osm.ts'
+      const config: any = './fixture/sqlite3/osm.json'
+      await writeTsFileSqlite3(db, config, outputFile)
+      return assert(await compare(expectedFile, outputFile))
+    })
+    it('no namespace', async () => {
+      const outputFile = './test/actual/sqlite3/osm-no-namespace.ts'
+      const expectedFile = './test/expected/sqlite3/osm-no-namespace.ts'
+      const config: any = './fixture/sqlite3/osm-no-namespace.json'
+      await writeTsFileSqlite3(db, config, outputFile)
+      return assert(await compare(expectedFile, outputFile))      
+    })
+    it('for insert generation', async () => {
+      const outputFile = './test/actual/sqlite3/osm-for-insert.ts'
+      const expectedFile = './test/expected/sqlite3/osm-for-insert.ts'
+      const config: any = './fixture/sqlite3/osm-for-insert.json'
+      await writeTsFileSqlite3(db, config, outputFile)
+      return assert(await compare(expectedFile, outputFile))      
+    })
+    it('for insert generation, requiring null fields', async () => {
+      const outputFile = './test/actual/sqlite3/osm-for-insert-with-null.ts'
+      const expectedFile = './test/expected/sqlite3/osm-for-insert-with-null.ts'
+      const config: any = './fixture/sqlite3/osm-for-insert-with-null.json'
+      await writeTsFileSqlite3(db, config, outputFile)
+      return assert(await compare(expectedFile, outputFile))      
+    })
+  })
+
+
 })

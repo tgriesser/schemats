@@ -2,6 +2,8 @@ import { Database } from './schemaInterfaces'
 import { PostgresDatabase } from './schemaPostgres'
 import { MysqlDatabase } from './schemaMysql'
 import { ClickHouseDatabase } from './schemaClickhouse'
+import type { OptionValues } from '.'
+import { Sqlite3Database } from './schemaSqlite3'
 
 enum SQLVersion {
     POSTGRES = 1,
@@ -22,7 +24,10 @@ function getSQLVersion(connection: string): SQLVersion {
     }
 }
 
-export function getDatabase(connection: string): Database {
+export function getDatabase(connection: string, options: OptionValues = {}): Database {
+    if (options.sqlite3) {
+        return new Sqlite3Database(connection)
+    }
     switch (getSQLVersion(connection)) {
         case SQLVersion.MYSQL:
             return new MysqlDatabase(connection)

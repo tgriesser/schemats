@@ -9,7 +9,12 @@ export class MysqlDatabase implements Database {
     private defaultSchema: string
 
     constructor(public connectionString: string) {
-        const mysql = require('mysql') as typeof import('mysql')
+        let mysql: typeof import('mysql')
+        try {
+            mysql = require('mysql') as typeof import('mysql')
+        } catch {
+            throw new Error('mysql is required as a peer dependency of schemats')
+        }
         this.db = mysql.createConnection(connectionString)
         let url = urlParse(connectionString, true)
         if (url && url.pathname) {

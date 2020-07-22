@@ -75,3 +75,20 @@ export async function writeTsFile(
     )
     await fs.writeFile(outputFile, formattedOutput)
 }
+
+export async function writeTsFileSqlite3(
+    db: Database,
+    inputConfigFile: string,
+    outputFile: string
+) {
+    const config: any = require(inputConfigFile)
+    let formattedOutput = await typescriptOfSchema(
+        db,
+        config.tables,
+        config.schema,
+        {
+            ...config
+        }
+    )
+    await fs.writeFile(outputFile, formattedOutput)
+}
