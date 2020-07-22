@@ -66,7 +66,7 @@ export async function typescriptOfTable(
     optionsObject: Options
 ) {
     if (typeof db === 'string') {
-        db = getDatabase(db)
+        db = getDatabase(db, optionsObject.options)
     }
 
     let interfaces = ''
@@ -92,7 +92,7 @@ export async function typescriptOfSchema(
     options: OptionValues = {}
 ): Promise<string> {
     if (typeof db === 'string') {
-        db = getDatabase(db)
+        db = getDatabase(db, options)
     }
 
     if (!schema) {

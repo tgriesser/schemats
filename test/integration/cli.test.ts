@@ -45,4 +45,25 @@ describe('schemats cli tool integration testing', () => {
             assert.equal(0, status)
         })
     })
+    describe('schemats generate clickhouse', () => {
+        before(async function() {
+            if (!process.env.CLICKHOUSE_URL) {
+                return this.skip()
+            }
+        })
+        it('should run without error', () => {
+            let { status, stdout, stderr } = spawnSync('node', [
+                'bin/schemats',
+                'generate',
+                '-c',
+                process.env.CLICKHOUSE_URL as string,
+                '-s',
+                'default',
+                '-o',
+                '/tmp/schemats_cli_clickhouse.ts'
+            ])
+            console.log('opopopopop', String(stdout), String(stderr))
+            assert.equal(0, status)
+        })
+    })
 })

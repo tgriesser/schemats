@@ -12,6 +12,7 @@ const DEFAULT_OPTIONS: OptionValues = {
 }
 
 export type OptionValues = {
+    sqlite3?: boolean
     prettier?: boolean
     prettierConfig?: ParserOptions
     camelCase?: boolean

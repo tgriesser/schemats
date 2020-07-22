@@ -1,0 +1,10 @@
+{
+    "tables": ["users"],
+    "writeHeader": false,
+    "tableNamespaces": true,
+    "prettierConfig": {
+        "tabWidth": 4,
+        "singleQuote": true,
+        "semi": false
+    }
+}
