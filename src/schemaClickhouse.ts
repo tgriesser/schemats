@@ -1,4 +1,4 @@
-import { ClickHouse } from 'clickhouse'
+import type { ClickHouse } from 'clickhouse'
 import { transform } from 'lodash'
 import { keys } from 'lodash'
 import { parse as urlParse } from 'url'
@@ -22,6 +22,7 @@ export class ClickHouseDatabase implements Database {
     private db: ClickHouse
 
     constructor(public connectionString: string) {
+        const { ClickHouse } = require('clickhouse') as typeof import('clickhouse')
         const parsed = urlParse(connectionString)
         this.db = new ClickHouse({
             url: `http://${parsed.hostname}`,

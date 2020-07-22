@@ -1,17 +1,23 @@
-import * as PgPromise from 'pg-promise'
+import type * as PgPromise from 'pg-promise'
 import { transform } from 'lodash'
 import { keys } from 'lodash'
 import Options from './options'
 
 import { TableDefinition, Database } from './schemaInterfaces'
 
-const pgp = PgPromise()
-
 export class PostgresDatabase implements Database {
     private db: PgPromise.IDatabase<{}>
-
+    private pgp: PgPromise.IMain
+    
     constructor(public connectionString: string) {
-        this.db = pgp(connectionString)
+        let PgPromise: typeof import('pg-promise')
+        try {
+            PgPromise = require('pg-promise') as typeof import('pg-promise')
+        } catch (e) {
+            throw new Error('pg-promise is required as a peerDependency of @tgriesser/schemats')
+        }
+        this.pgp = PgPromise()
+        this.db = this.pgp(connectionString)
     }
 
     private static mapTableDefinitionToType(
@@ -120,7 +126,7 @@ export class PostgresDatabase implements Database {
         type T = { name: string; value: any }
         let enums: any = {}
         let enumSchemaWhereClause = schema
-            ? pgp.as.format(`where n.nspname = $1`, schema)
+            ? this.pgp.as.format(`where n.nspname = $1`, schema)
             : ''
         await this.db.each<T>(
             'select n.nspname as schema, t.typname as name, e.enumlabel as value ' +

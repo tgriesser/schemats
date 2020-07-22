@@ -1,4 +1,4 @@
-import * as mysql from 'mysql'
+import type * as mysql from 'mysql'
 import { mapValues, keys, isEqual } from 'lodash'
 import { parse as urlParse } from 'url'
 import { TableDefinition, Database } from './schemaInterfaces'
@@ -9,6 +9,7 @@ export class MysqlDatabase implements Database {
     private defaultSchema: string
 
     constructor(public connectionString: string) {
+        const mysql = require('mysql') as typeof import('mysql')
         this.db = mysql.createConnection(connectionString)
         let url = urlParse(connectionString, true)
         if (url && url.pathname) {
