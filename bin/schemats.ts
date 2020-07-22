@@ -6,8 +6,7 @@
 
 import * as yargs from 'yargs'
 import * as fs from 'fs'
-import { typescriptOfSchema, getDatabase } from '../src/index'
-import Options from '../src/options'
+import { typescriptOfSchema } from '../src/index'
 
 interface SchematsConfig {
     conn: string
@@ -18,6 +17,7 @@ interface SchematsConfig {
     noHeader: boolean
     tableNamespaces: boolean
     forInsert: boolean
+    sqlite3: boolean
 }
 
 let argv: SchematsConfig = yargs
@@ -54,6 +54,7 @@ let argv: SchematsConfig = yargs
     .nargs('o', 1)
     .alias('o', 'output')
     .describe('o', 'output file name')
+    .describe('sqlite3', 'For sqlite3 dbs')
     .help('h')
     .alias('h', 'help').argv
 ;(async () => {
@@ -74,7 +75,8 @@ let argv: SchematsConfig = yargs
                 camelCase: argv.camelCase,
                 writeHeader: !argv.noHeader,
                 tableNamespaces: Boolean(argv.tableNamespaces),
-                forInsert: Boolean(argv.forInsert)
+                forInsert: Boolean(argv.forInsert),
+                sqlite3: Boolean(argv.sqlite3)
             }
         )
         fs.writeFileSync(argv.output, formattedOutput)

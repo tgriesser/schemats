@@ -1,5 +1,6 @@
-import { mapValues, keys, isEqual, transform } from 'lodash'
+import { transform } from 'lodash'
 import type * as Sqlite3Db from 'better-sqlite3'
+import * as path from 'path'
 import { TableDefinition, Database } from './schemaInterfaces'
 import Options from './options'
 
@@ -8,12 +9,15 @@ export class Sqlite3Database implements Database {
 
     constructor(public connectionString: string) {
         let DBConstructor: typeof import('better-sqlite3')
+        if (!path.isAbsolute(connectionString)) {
+            this.connectionString = path.join(process.cwd(), connectionString)
+        }
         try {
             DBConstructor = require('better-sqlite3')
         } catch (e) {
             throw new Error('better-sqlite3 is required as a dependency of schemats')
         }
-        this.db = DBConstructor(connectionString, { fileMustExist: true })
+        this.db = DBConstructor(this.connectionString, { fileMustExist: true })
     }
 
     // uses the type mappings from https://github.com/mysqljs/ where sensible
