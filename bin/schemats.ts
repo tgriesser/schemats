@@ -13,12 +13,16 @@ interface SchematsConfig {
     table: string[] | string
     schema: string
     output: string
-    camelCase: boolean
-    noHeader: boolean
-    tableNamespaces: boolean
-    forInsert: boolean
-    sqlite3: boolean
-    skipTables: string[] | string
+    camelCase?: boolean
+    noHeader?: boolean
+    tableNamespaces?: boolean
+    forInsert?: boolean
+    sqlite3?: boolean
+    skipTables?: string[] | string
+    customTypes?: object
+    customHeader?: string
+    prettier?: boolean
+    prettierConfig?: any
 }
 
 let argv: SchematsConfig = yargs
@@ -57,6 +61,8 @@ let argv: SchematsConfig = yargs
     .describe('o', 'output file name')
     .describe('sqlite3', 'For sqlite3 dbs')
     .describe('skipTables', 'tables to skip')
+    .describe('customTypes', 'Mapping of custom types for a table column')
+    .describe('customHeader', 'Custom header to prefix the output file')
     .help('h')
     .alias('h', 'help').argv
 ;(async () => {
@@ -74,6 +80,10 @@ let argv: SchematsConfig = yargs
             argv.table,
             argv.schema,
             {
+                prettier: argv.prettier,
+                prettierConfig: argv.prettierConfig,
+                customHeader: argv.customHeader,
+                customTypes: argv.customTypes,
                 camelCase: argv.camelCase,
                 writeHeader: !argv.noHeader,
                 tableNamespaces: Boolean(argv.tableNamespaces),
@@ -82,7 +92,7 @@ let argv: SchematsConfig = yargs
                 skipTables:
                     typeof argv.skipTables === 'string'
                         ? [argv.skipTables]
-                        : undefined
+                        : undefined,
             }
         )
         fs.writeFileSync(argv.output, formattedOutput)
