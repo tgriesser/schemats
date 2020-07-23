@@ -103,6 +103,10 @@ export async function typescriptOfSchema(
         tables = await db.getSchemaTables(schema)
     }
 
+    if (options.skipTables?.length) {
+        tables = tables.filter(t => !options.skipTables?.includes(t))
+    }
+
     const optionsObject = new Options(options)
 
     const enumTypes = generateEnumType(

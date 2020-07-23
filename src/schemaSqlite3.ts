@@ -3,10 +3,12 @@ import type * as Sqlite3Db from 'better-sqlite3'
 import * as path from 'path'
 import { TableDefinition, Database } from './schemaInterfaces'
 import Options from './options'
+import _ = require('lodash')
 
 export class Sqlite3Database implements Database {
     private db: Sqlite3Db
-
+    private increments: Record<string, string>
+    
     constructor(public connectionString: string) {
         let DBConstructor: typeof import('better-sqlite3')
         if (!path.isAbsolute(connectionString)) {
@@ -18,6 +20,7 @@ export class Sqlite3Database implements Database {
             throw new Error('better-sqlite3 is required as a dependency of schemats')
         }
         this.db = DBConstructor(this.connectionString, { fileMustExist: true })
+        this.increments = this.getAutoIncrements()
     }
 
     // uses the type mappings from https://github.com/mysqljs/ where sensible
@@ -64,7 +67,7 @@ export class Sqlite3Database implements Database {
         let tableDefinition: TableDefinition = {}
 
         const tableColumns = await this.db.pragma(`table_info(${tableName})`)
-        
+
         tableColumns.map(
             (schemaItem: {
                 cid: number
@@ -74,10 +77,15 @@ export class Sqlite3Database implements Database {
                 dflt_value: string | null
             }) => {
                 const columnName = schemaItem.name
+                let defaultValue = schemaItem.dflt_value
+                if (this.increments[tableName] === `"${schemaItem.name}"`) {
+                    defaultValue = ':autoincrement:'
+                }
+
                 tableDefinition[columnName] = {
                     udtName: schemaItem.type,
                     nullable: schemaItem.notnull === 0,
-                    defaultValue: schemaItem.dflt_value
+                    defaultValue
                 }
             }
         )
@@ -111,5 +119,42 @@ export class Sqlite3Database implements Database {
     
     public async query() {
       return []
+    }
+
+    public getAutoIncrements() {
+        // https://stackoverflow.com/a/47458402
+        const rows = this.db.prepare(`
+            WITH RECURSIVE
+                a AS (
+                    SELECT name, lower(replace(replace(sql, char(13), ' '), char(10), ' ')) AS sql
+                    FROM sqlite_master
+                    WHERE lower(sql) LIKE '%integer% autoincrement%'
+                ),
+                b AS (
+                    SELECT name, trim(substr(sql, instr(sql, '(') + 1)) AS sql
+                    FROM a
+                ),
+                c AS (
+                    SELECT b.name, sql, '' AS col
+                    FROM b
+                    UNION ALL
+                    SELECT 
+                    c.name, 
+                    trim(substr(c.sql, ifnull(nullif(instr(c.sql, ','), 0), instr(c.sql, ')')) + 1)) AS sql, 
+                    trim(substr(c.sql, 1, ifnull(nullif(instr(c.sql, ','), 0), instr(c.sql, ')')) - 1)) AS col
+                    FROM c JOIN b ON c.name = b.name
+                    WHERE c.sql != ''
+                ),
+                d AS (
+                    SELECT name, substr(col, 1, instr(col, ' ') - 1) AS col
+                    FROM c
+                    WHERE col LIKE '%autoincrement%'
+                )
+                SELECT name, col  
+                FROM d
+                ORDER BY name, col;
+        `).all()
+
+        return _.mapValues(_.keyBy(rows, 'name'), 'col')
     }
 }

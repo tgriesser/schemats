@@ -22,6 +22,7 @@ export type OptionValues = {
     forInsert?: boolean // makes any columns with a "default" optional
     forInsertNull?: boolean // whether to require nullable columns without a default
     customTypes?: Record<string, any>
+    skipTables?: string[]
     // inlineEnum?: boolean // whether to create/export enum types
 }
 

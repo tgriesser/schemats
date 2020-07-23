@@ -1,6 +1,7 @@
 /* tslint:disable */
 
 export interface Users {
+    autoincr: number
     blobCol: Buffer | null
     blobColDefault: Buffer | null
     boolCol: number | null

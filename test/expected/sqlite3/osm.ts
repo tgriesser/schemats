@@ -1,6 +1,7 @@
 /* tslint:disable */
 
 export namespace usersFields {
+    export type autoincr = number
     export type blob_col = Buffer | null
     export type blob_col_default = Buffer | null
     export type bool_col = number | null
@@ -18,6 +19,7 @@ export namespace usersFields {
 }
 
 export interface users {
+    autoincr: usersFields.autoincr
     blob_col: usersFields.blob_col
     blob_col_default: usersFields.blob_col_default
     bool_col: usersFields.bool_col

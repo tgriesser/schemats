@@ -18,6 +18,7 @@ interface SchematsConfig {
     tableNamespaces: boolean
     forInsert: boolean
     sqlite3: boolean
+    skipTables: string[] | string
 }
 
 let argv: SchematsConfig = yargs
@@ -55,6 +56,7 @@ let argv: SchematsConfig = yargs
     .alias('o', 'output')
     .describe('o', 'output file name')
     .describe('sqlite3', 'For sqlite3 dbs')
+    .describe('skipTables', 'tables to skip')
     .help('h')
     .alias('h', 'help').argv
 ;(async () => {
@@ -76,7 +78,11 @@ let argv: SchematsConfig = yargs
                 writeHeader: !argv.noHeader,
                 tableNamespaces: Boolean(argv.tableNamespaces),
                 forInsert: Boolean(argv.forInsert),
-                sqlite3: Boolean(argv.sqlite3)
+                sqlite3: Boolean(argv.sqlite3),
+                skipTables:
+                    typeof argv.skipTables === 'string'
+                        ? [argv.skipTables]
+                        : undefined
             }
         )
         fs.writeFileSync(argv.output, formattedOutput)
