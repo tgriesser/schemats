@@ -92,7 +92,7 @@ let argv: SchematsConfig = yargs
                 skipTables:
                     typeof argv.skipTables === 'string'
                         ? [argv.skipTables]
-                        : undefined,
+                        : argv.skipTables,
             }
         )
         fs.writeFileSync(argv.output, formattedOutput)
