@@ -1,6 +1,6 @@
 {
     "name": "@tgriesser/schemats",
-    "version": "6.0.4",
+    "version": "6.0.5",
     "description": "Fork of schemats - Generate typescript interface definitions from (postgres) SQL database schema",
     "keywords": [
         "postgres",
