@@ -8,13 +8,15 @@ import { TableDefinition, Database } from './schemaInterfaces'
 export class PostgresDatabase implements Database {
     private db: PgPromise.IDatabase<{}>
     private pgp: PgPromise.IMain
-    
+
     constructor(public connectionString: string) {
         let PgPromise: typeof import('pg-promise')
         try {
             PgPromise = require('pg-promise') as typeof import('pg-promise')
         } catch (e) {
-            throw new Error('pg-promise is required as a peerDependency of @tgriesser/schemats')
+            throw new Error(
+                'pg-promise is required as a peerDependency of @tgriesser/schemats'
+            )
         }
         this.pgp = PgPromise()
         this.db = this.pgp(connectionString)
@@ -163,7 +165,7 @@ export class PostgresDatabase implements Database {
                 tableDefinition[schemaItem.column_name] = {
                     udtName: schemaItem.udt_name,
                     nullable: schemaItem.is_nullable === 'YES',
-                    defaultValue: schemaItem.column_default
+                    defaultValue: schemaItem.column_default,
                 }
             }
         )
@@ -186,7 +188,7 @@ export class PostgresDatabase implements Database {
     }
 
     public async getSchemaTables(schemaName: string): Promise<string[]> {
-        return await this.db.map<string>(
+        const schemaTables = await this.db.map<string>(
             'SELECT table_name ' +
                 'FROM information_schema.columns ' +
                 'WHERE table_schema = $1 ' +
@@ -194,6 +196,8 @@ export class PostgresDatabase implements Database {
             [schemaName],
             (schemaItem: { table_name: string }) => schemaItem.table_name
         )
+
+        return schemaTables?.sort()
     }
 
     getDefaultSchema(): string {

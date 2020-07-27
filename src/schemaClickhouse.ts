@@ -22,11 +22,13 @@ export class ClickHouseDatabase implements Database {
     private db: ClickHouse
 
     constructor(public connectionString: string) {
-        const { ClickHouse } = require('clickhouse') as typeof import('clickhouse')
+        const {
+            ClickHouse,
+        } = require('clickhouse') as typeof import('clickhouse')
         const parsed = urlParse(connectionString)
         this.db = new ClickHouse({
             url: `http://${parsed.hostname}`,
-            port: parsed.port || 8123
+            port: parsed.port || 8123,
         })
     }
 
@@ -114,7 +116,7 @@ export class ClickHouseDatabase implements Database {
     public async query(queryString: string) {
         const queries = queryString
             .split(';')
-            .map(q => q.trim())
+            .map((q) => q.trim())
             .filter(Boolean)
 
         let results: any[] = []
@@ -158,7 +160,7 @@ export class ClickHouseDatabase implements Database {
                 udtName: type,
                 nullable: nullable,
                 defaultValue,
-                rawType: row.type
+                rawType: row.type,
             } as TableDefinition[any]
         })
 
@@ -186,7 +188,7 @@ export class ClickHouseDatabase implements Database {
                 `SELECT * FROM system.tables WHERE database = '${schemaName}'`
             )
             .toPromise()
-        return (rows as any[]).map(row => row.name)
+        return (rows as any[]).map((row) => row.name).sort()
     }
 
     getDefaultSchema(): string {

@@ -13,7 +13,9 @@ export class MysqlDatabase implements Database {
         try {
             mysql = require('mysql') as typeof import('mysql')
         } catch {
-            throw new Error('mysql is required as a peer dependency of schemats')
+            throw new Error(
+                'mysql is required as a peer dependency of schemats'
+            )
         }
         this.db = mysql.createConnection(connectionString)
         let url = urlParse(connectionString, true)
@@ -32,7 +34,7 @@ export class MysqlDatabase implements Database {
         options: Options
     ): TableDefinition {
         if (!options) throw new Error()
-        return mapValues(tableDefinition, column => {
+        return mapValues(tableDefinition, (column) => {
             switch (column.udtName) {
                 case 'char':
                 case 'varchar':
@@ -181,7 +183,7 @@ export class MysqlDatabase implements Database {
                           )
                         : dataType,
                     nullable: schemaItem.is_nullable === 'YES',
-                    defaultValue: schemaItem.column_default
+                    defaultValue: schemaItem.column_default,
                 }
             }
         )
@@ -210,9 +212,9 @@ export class MysqlDatabase implements Database {
                 'GROUP BY table_name',
             [schemaName]
         )
-        return schemaTables.map(
-            (schemaItem: { table_name: string }) => schemaItem.table_name
-        )
+        return schemaTables
+            .map((schemaItem: { table_name: string }) => schemaItem.table_name)
+            .sort()
     }
 
     public queryAsync(

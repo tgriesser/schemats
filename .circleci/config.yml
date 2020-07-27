@@ -4,10 +4,12 @@ jobs:
         working_directory: ~/schemats
         docker: # run the steps with Docker
             - image: node:10
+            - image: keinos/sqlite3:latest
             - image: postgres:9.6
               environment:
                   POSTGRES_USER: ubuntu
                   POSTGRES_DB: schemats_test
+                  POSTGRES_HOST_AUTH_METHOD: trust
             - image: mysql:5.7
               environment:
                   MYSQL_DATABASE: schemats_test

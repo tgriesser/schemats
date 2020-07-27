@@ -8,7 +8,7 @@ import _ = require('lodash')
 export class Sqlite3Database implements Database {
     private db: Sqlite3Db
     private increments: Record<string, string>
-    
+
     constructor(public connectionString: string) {
         let DBConstructor: typeof import('better-sqlite3')
         if (!path.isAbsolute(connectionString)) {
@@ -17,7 +17,9 @@ export class Sqlite3Database implements Database {
         try {
             DBConstructor = require('better-sqlite3')
         } catch (e) {
-            throw new Error('better-sqlite3 is required as a dependency of schemats')
+            throw new Error(
+                'better-sqlite3 is required as a dependency of schemats'
+            )
         }
         this.db = DBConstructor(this.connectionString, { fileMustExist: true })
         this.increments = this.getAutoIncrements()
@@ -34,7 +36,9 @@ export class Sqlite3Database implements Database {
             acc[columnName] = column
             const type = column.udtName.toUpperCase()
             if (
-                typeof options.options.customTypes?.[tableName]?.[columnName] !== 'undefined'
+                typeof options.options.customTypes?.[tableName]?.[
+                    columnName
+                ] !== 'undefined'
             ) {
                 column.tsCustomType = true
                 column.tsType =
@@ -48,7 +52,7 @@ export class Sqlite3Database implements Database {
             } else if (/(CHAR|CLOB|TEXT)/.test(type)) {
                 column.tsType = 'string'
             } else if (/BLOB/.test(type)) {
-                column.tsType = 'Buffer';
+                column.tsType = 'Buffer'
             } else if (/(REAL|FLOA|DOUB)/) {
                 column.tsType = 'number'
             } else if (type === 'BOOLEAN') {
@@ -85,7 +89,7 @@ export class Sqlite3Database implements Database {
                 tableDefinition[columnName] = {
                     udtName: schemaItem.type,
                     nullable: schemaItem.notnull === 0,
-                    defaultValue
+                    defaultValue,
                 }
             }
         )
@@ -105,25 +109,27 @@ export class Sqlite3Database implements Database {
     }
 
     public async getSchemaTables(): Promise<string[]> {
-        const schemaTables = this.db.prepare(
-          'SELECT name FROM sqlite_master WHERE type = ?'
-        ).all('table')
-        return schemaTables.map(
-            (schemaItem: { name: string }) => schemaItem.name
-        )
+        const schemaTables = this.db
+            .prepare('SELECT name FROM sqlite_master WHERE type = ?')
+            .all('table')
+        return schemaTables
+            .map((schemaItem: { name: string }) => schemaItem.name)
+            .sort()
     }
 
     public getDefaultSchema(): string {
         return ''
     }
-    
+
     public async query() {
-      return []
+        return []
     }
 
     public getAutoIncrements() {
         // https://stackoverflow.com/a/47458402
-        const rows = this.db.prepare(`
+        const rows = this.db
+            .prepare(
+                `
             WITH RECURSIVE
                 a AS (
                     SELECT name, lower(replace(replace(sql, char(13), ' '), char(10), ' ')) AS sql
@@ -153,7 +159,9 @@ export class Sqlite3Database implements Database {
                 SELECT name, col  
                 FROM d
                 ORDER BY name, col;
-        `).all()
+        `
+            )
+            .all()
 
         return _.mapValues(_.keyBy(rows, 'name'), 'col')
     }
