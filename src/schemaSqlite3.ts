@@ -121,8 +121,8 @@ export class Sqlite3Database implements Database {
         return ''
     }
 
-    public async query() {
-        return []
+    public async query(sql: string) {
+        return this.db.prepare(sql).all()
     }
 
     public getAutoIncrements() {
