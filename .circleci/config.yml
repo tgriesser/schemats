@@ -3,7 +3,7 @@ jobs:
     build:
         working_directory: ~/schemats
         docker: # run the steps with Docker
-            - image: node:10
+            - image: node:14
             - image: keinos/sqlite3:latest
             - image: postgres:9.6
               environment:
