@@ -6,8 +6,8 @@ import Options from './options'
 import { TableDefinition, Database } from './schemaInterfaces'
 
 export class PostgresDatabase implements Database {
-    private db: PgPromise.IDatabase<{}>
-    private pgp: PgPromise.IMain
+    readonly db: PgPromise.IDatabase<{}>
+    readonly pgp: PgPromise.IMain
 
     constructor(public connectionString: string) {
         let PgPromise: typeof import('pg-promise')
