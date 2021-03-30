@@ -31,10 +31,30 @@ export class MysqlDatabase implements Database {
     private static mapTableDefinitionToType(
         tableDefinition: TableDefinition,
         customTypes: string[],
-        options: Options
+        options: Options,
+        tableName: string
     ): TableDefinition {
         if (!options) throw new Error()
-        return mapValues(tableDefinition, (column) => {
+        return mapValues(tableDefinition, (column, columnName) => {
+            if (
+                options.options.customTypes?.[tableName]?.[columnName] !==
+                undefined
+            ) {
+                column.tsCustomType = true
+                column.tsType =
+                    options.options.customTypes[tableName][columnName]
+                return column
+            }
+
+            if (
+                options.options.customTypeTransform?.[column.udtName] !==
+                undefined
+            ) {
+                column.tsType =
+                    options.options.customTypeTransform?.[column.udtName]
+                return column
+            }
+
             switch (column.udtName) {
                 case 'char':
                 case 'varchar':
@@ -200,7 +220,8 @@ export class MysqlDatabase implements Database {
         return MysqlDatabase.mapTableDefinitionToType(
             await this.getTableDefinition(tableName, tableSchema),
             customTypes,
-            options
+            options,
+            tableName
         )
     }
 

@@ -31,16 +31,24 @@ export class PostgresDatabase implements Database {
         return transform(tableDefinition, (acc, column, columnName) => {
             acc[columnName] = column
             if (
-                options.options.customTypes &&
-                options.options.customTypes[tableName] &&
-                typeof options.options.customTypes[tableName][columnName] !==
-                    'undefined'
+                options.options.customTypes?.[tableName]?.[columnName] !==
+                undefined
             ) {
                 column.tsCustomType = true
                 column.tsType =
                     options.options.customTypes[tableName][columnName]
                 return
             }
+
+            if (
+                options.options.customTypeTransform?.[column.udtName] !==
+                undefined
+            ) {
+                column.tsType =
+                    options.options.customTypeTransform?.[column.udtName]
+                return
+            }
+
             // console.log(column, columnName)
             switch (column.udtName) {
                 case 'bpchar':
@@ -57,11 +65,13 @@ export class PostgresDatabase implements Database {
                 case 'name':
                     column.tsType = 'string'
                     break
+                case 'int8': // BigInt is cast as string in pg
+                    column.tsType = 'string'
+                    break
                 case 'int2':
                 case 'int4':
-                case 'int8':
-                case 'float4':
                 case 'float8':
+                case 'float4':
                 case 'numeric':
                 case 'money':
                 case 'oid':
@@ -79,9 +89,11 @@ export class PostgresDatabase implements Database {
                 case 'timestamptz':
                     column.tsType = 'Date'
                     break
+                case '_int8':
+                    column.tsType = 'Array<string>'
+                    break
                 case '_int2':
                 case '_int4':
-                case '_int8':
                 case '_float4':
                 case '_float8':
                 case '_numeric':

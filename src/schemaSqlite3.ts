@@ -36,13 +36,17 @@ export class Sqlite3Database implements Database {
             acc[columnName] = column
             const type = column.udtName.toUpperCase()
             if (
-                typeof options.options.customTypes?.[tableName]?.[
-                    columnName
-                ] !== 'undefined'
+                options.options.customTypes?.[tableName]?.[columnName] !==
+                undefined
             ) {
                 column.tsCustomType = true
                 column.tsType =
                     options.options.customTypes[tableName][columnName]
+                return
+            }
+
+            if (options.options.customTypeTransform?.[type] !== undefined) {
+                column.tsType = options.options.customTypeTransform?.[type]
                 return
             }
 
