@@ -32,7 +32,7 @@ export interface Users {
     homeLat: number | null
     homeLon: number | null
     homeZoom: number | null
-    id: number
+    id: string
     imageContentType: string | null
     imageFileName: string | null
     imageFingerprint: string | null
@@ -40,7 +40,7 @@ export interface Users {
     inetCol: string | null
     int2ArrayCol: Array<number> | null
     int4ArrayCol: Array<number> | null
-    int8ArrayCol: Array<number> | null
+    int8ArrayCol: Array<string> | null
     intervalCol: string | null
     jsonArrayCol: Array<Object> | null
     jsonCol: any | null
