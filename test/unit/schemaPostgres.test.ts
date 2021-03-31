@@ -298,7 +298,7 @@ describe('PostgresDatabase', () => {
                         defaultValue: null
                     }
                 }
-                assert.equal(PostgresDBReflection.mapTableDefinitionToType(td,[],options).column.tsType, 'number')
+                assert.equal(PostgresDBReflection.mapTableDefinitionToType(td,[],options).column.tsType, 'string')
             })
             it('float4', () => {
                 const td: TableDefinition = {
@@ -446,7 +446,7 @@ describe('PostgresDatabase', () => {
                         defaultValue: null
                     }
                 }
-                assert.equal(PostgresDBReflection.mapTableDefinitionToType(td,[],options).column.tsType, 'Array<number>')
+                assert.equal(PostgresDBReflection.mapTableDefinitionToType(td,[],options).column.tsType, 'Array<string>')
             })
             it('_float4', () => {
                 const td: TableDefinition = {

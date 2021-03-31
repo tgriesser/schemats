@@ -7,7 +7,7 @@ const DEFAULT_OPTIONS: OptionValues = {
     camelCase: false,
     tableNamespaces: false,
     forInsert: false,
-    forInsertNull: false
+    forInsertNull: false,
     // inlineEnum: false
 }
 
@@ -22,6 +22,7 @@ export type OptionValues = {
     forInsert?: boolean // makes any columns with a "default" optional
     forInsertNull?: boolean // whether to require nullable columns without a default
     customTypes?: Record<string, any>
+    customTypeTransform?: Record<string, any> // transform the native type to a ts type
     skipTables?: string[]
     // inlineEnum?: boolean // whether to create/export enum types
 }

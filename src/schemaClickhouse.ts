@@ -41,14 +41,21 @@ export class ClickHouseDatabase implements Database {
         return transform(tableDefinition, (acc, column, columnName) => {
             acc[columnName] = column
             if (
-                options.options.customTypes &&
-                options.options.customTypes[tableName] &&
-                typeof options.options.customTypes[tableName][columnName] !==
-                    'undefined'
+                options.options.customTypes?.[tableName]?.[columnName] !==
+                undefined
             ) {
                 column.tsCustomType = true
                 column.tsType =
                     options.options.customTypes[tableName][columnName]
+                return
+            }
+
+            if (
+                options.options.customTypeTransform?.[column.udtName] !==
+                undefined
+            ) {
+                column.tsType =
+                    options.options.customTypeTransform?.[column.udtName]
                 return
             }
 

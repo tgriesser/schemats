@@ -32,7 +32,7 @@ export namespace usersFields {
     export type home_lat = number | null
     export type home_lon = number | null
     export type home_zoom = number | null
-    export type id = number
+    export type id = string
     export type image_content_type = string | null
     export type image_file_name = string | null
     export type image_fingerprint = string | null
@@ -40,7 +40,7 @@ export namespace usersFields {
     export type inet_col = string | null
     export type int2_array_col = Array<number> | null
     export type int4_array_col = Array<number> | null
-    export type int8_array_col = Array<number> | null
+    export type int8_array_col = Array<string> | null
     export type interval_col = string | null
     export type json_array_col = Array<Object> | null
     export type json_col = any | null
