@@ -53,7 +53,15 @@ describe('schemat generation integration testing', () => {
       const config: any = './fixture/postgres/osm-for-insert-with-null.json'
       await writeTsFile(inputSQLFile, config, outputFile, db)
       return assert(await compare(expectedFile, outputFile))
-    })    
+    })  
+    it('For Type tranform of UUID', async () => {
+        const inputSQLFile = 'test/fixture/postgres/osm-uuid.sql'
+        const outputFile = './test/actual/postgres/osm-for-type-transform.ts'
+        const expectedFile = './test/expected/postgres/osm-for-type-transform.ts'
+        const config: any = './fixture/postgres/osm-for-type-transform.json'
+        await writeTsFile(inputSQLFile, config, outputFile, db)
+        return assert(await compare(expectedFile, outputFile))
+      })   
   })
 
   describe('mysql', () => {

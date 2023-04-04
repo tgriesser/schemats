@@ -343,3 +343,4 @@ test/actual/*
 coverage/
 *.map
 .DS_Store
+.vscode/

@@ -73,6 +73,7 @@ export async function writeTsFile(
             ...config
         }
     )
+    console.log(`Writing output file to ${outputFile}`)
     await fs.writeFile(outputFile, formattedOutput)
 }
 

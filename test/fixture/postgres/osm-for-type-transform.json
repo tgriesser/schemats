@@ -1,0 +1,22 @@
+{
+  "tables": ["users", "people"],
+  "schema": null,
+  "camelCase": true,
+  "writeHeader": false,
+  "forInsert": true,
+  "forInsertNull": true,
+  "prettierConfig": {
+      "tabWidth": 4,
+      "singleQuote": true,
+      "semi": false
+  },
+  "customTypes": {
+      "users": {
+          "custom_table_type": "'a' | 'b' | 'c'"
+      }
+  },
+  "customTypeTransform": {
+	  "uuid": "uuid"
+  },
+  "customHeader": "/* tslint:disable */\nexport type uuid = string"
+}
