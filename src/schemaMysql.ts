@@ -155,7 +155,7 @@ export class MysqlDatabase implements Database {
             params = []
         }
         const rawEnumRecords = await this.queryAsync(
-            'SELECT column_name as `column_name`, column_type as `column_type`, data_type as `data_type`' +
+            'SELECT column_name as `column_name`, column_type as `column_type`, data_type as `data_type` ' +
                 'FROM information_schema.columns ' +
                 `WHERE data_type IN ('enum', 'set') ${enumSchemaWhereClause}`,
             params

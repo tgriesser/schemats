@@ -3,7 +3,7 @@ import * as path from 'path'
 import { Database, getDatabase } from '../../src/index'
 import { writeTsFile, compare, loadSchema, writeTsFileSqlite3 } from '../testUtility'
 
-describe('schemat generation integration testing', () => {
+describe('schemats generation integration testing', () => {
   describe('postgres', () => {
     let db: Database
     before(async function() {

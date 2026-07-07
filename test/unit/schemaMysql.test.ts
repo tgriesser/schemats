@@ -82,7 +82,7 @@ describe('MysqlDatabase', () => {
             assert.deepEqual(
                 MysqlDBReflection.prototype.queryAsync.getCall(0).args,
                 [
-                    'SELECT column_name as `column_name, column_type as `column_type`, data_type as `data_type` ' +
+                    'SELECT column_name as `column_name`, column_type as `column_type`, data_type as `data_type` ' +
                         'FROM information_schema.columns ' +
                         "WHERE data_type IN ('enum', 'set') and table_schema = ?",
                     ['testschema'],
@@ -95,7 +95,7 @@ describe('MysqlDatabase', () => {
             assert.deepEqual(
                 MysqlDBReflection.prototype.queryAsync.getCall(0).args,
                 [
-                    'SELECT column_name as `column_name, column_type as `column_type`, data_type as `data_type` ' +
+                    'SELECT column_name as `column_name`, column_type as `column_type`, data_type as `data_type` ' +
                         'FROM information_schema.columns ' +
                         "WHERE data_type IN ('enum', 'set') ",
                     [],
@@ -175,7 +175,7 @@ describe('MysqlDatabase', () => {
             assert.deepEqual(
                 MysqlDBReflection.prototype.queryAsync.getCall(0).args,
                 [
-                    'SELECT column_name as `column_name, data_type as `data_type`, is_nullable as `is_nullable`, column_default as `column_default` ' +
+                    'SELECT column_name as `column_name`, data_type as `data_type`, is_nullable as `is_nullable`, column_default as `column_default` ' +
                         'FROM information_schema.columns ' +
                         'WHERE table_name = ? and table_schema = ?',
                     ['testtable', 'testschema'],

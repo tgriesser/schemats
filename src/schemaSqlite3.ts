@@ -62,7 +62,7 @@ export class Sqlite3Database implements Database {
             } else if (type === 'BOOLEAN') {
                 column.tsType = '1 | 0'
             } else {
-                column.tsType = 'numeric'
+                column.tsType = 'number'
             }
         })
     }
