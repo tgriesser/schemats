@@ -5,18 +5,11 @@ import { TableDefinition, Database } from './schemaInterfaces'
 import Options from './options'
 
 export class MysqlDatabase implements Database {
-    private db: mysql.IConnection
+    private db: mysql.Connection
     private defaultSchema: string
 
     constructor(public connectionString: string) {
-        let mysql: typeof import('mysql')
-        try {
-            mysql = require('mysql') as typeof import('mysql')
-        } catch {
-            throw new Error(
-                'mysql is required as a peer dependency of schemats'
-            )
-        }
+        const mysql = MysqlDatabase.loadDriver()
         this.db = mysql.createConnection(connectionString)
         let url = urlParse(connectionString, true)
         if (url && url.pathname) {
@@ -24,6 +17,23 @@ export class MysqlDatabase implements Database {
             this.defaultSchema = database
         } else {
             this.defaultSchema = 'public'
+        }
+    }
+
+    // Loads whichever mysql driver is installed, preferring `mysql` and
+    // falling back to the API-compatible `mysql2`. `req` is injectable so the
+    // fallback can be exercised in tests.
+    static loadDriver(req: NodeRequire = require): typeof import('mysql') {
+        try {
+            return req('mysql') as typeof import('mysql')
+        } catch {
+            try {
+                return req('mysql2') as typeof import('mysql')
+            } catch {
+                throw new Error(
+                    'mysql or mysql2 is required as a peer dependency of schemats'
+                )
+            }
         }
     }
 
@@ -246,7 +256,7 @@ export class MysqlDatabase implements Database {
             this.db.query(
                 queryString,
                 escapedValues,
-                (error: Error, results: Array<Object>) => {
+                (error: Error | null, results: any) => {
                     if (error) {
                         return reject(error)
                     }
