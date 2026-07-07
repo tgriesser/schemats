@@ -57,12 +57,12 @@ export class Sqlite3Database implements Database {
                 column.tsType = 'string'
             } else if (/BLOB/.test(type)) {
                 column.tsType = 'Buffer'
-            } else if (/(REAL|FLOA|DOUB)/) {
+            } else if (/(REAL|FLOA|DOUB)/.test(type)) {
                 column.tsType = 'number'
             } else if (type === 'BOOLEAN') {
                 column.tsType = '1 | 0'
             } else {
-                column.tsType = 'numeric'
+                column.tsType = 'number'
             }
         })
     }

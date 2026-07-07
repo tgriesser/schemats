@@ -4,7 +4,7 @@ export namespace usersFields {
     export type autoincr = number
     export type blob_col = Buffer | null
     export type blob_col_default = Buffer | null
-    export type bool_col = number | null
+    export type bool_col = 1 | 0 | null
     export type date_col = number | null
     export type float_col = number
     export type float_col_default = number | null

@@ -4,7 +4,7 @@ export interface Users {
     autoincr?: number
     blobCol: Buffer | null
     blobColDefault?: Buffer | null
-    boolCol: number | null
+    boolCol: 1 | 0 | null
     dateCol: number | null
     floatCol: number
     floatColDefault?: number | null
